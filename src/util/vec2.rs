@@ -1,7 +1,6 @@
 use std::ops::{Add, AddAssign};
-use serde::Serialize;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct Vec2<T> {
     pub x: T,
     pub y: T,

@@ -1,18 +1,17 @@
 use rand::prelude::*;
-use serde::Serialize;
 use crate::util::{
     vec2::Vec2,
     direction::Direction,
 };
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct Cell {
     pos: Vec2<u32>,
     dir_walked: Option<Direction>,
     visited: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct Engine {
     stack: Vec<Vec2<usize>>,
     pub size: Vec2<u32>,
@@ -181,6 +180,12 @@ impl Engine {
 
         return Some(rand_vec);
     }
+
+    pub fn save_image(&self, filepath: String, pixel_size: u32) -> Result<(), String> {
+        img_export::save_image(self, pixel_size as i32, filepath);
+
+        Ok(())
+    }
 }
 
 impl Cell {
@@ -197,5 +202,28 @@ impl Cell {
     pub fn visited(&self) -> bool {
         // If the dir_walked attribute is set, then the cell must have been visited
         return self.visited;
+    }
+}
+
+mod img_export {
+    use crate::util::vec2::Vec2;
+    use image::{RgbImage, ImageFormat, Rgb};
+    use imageproc::{
+        rect::{Rect, RectPosition},
+        drawing::draw_filled_rect,
+    };
+
+    pub fn save_image(state: &super::Engine, pixel_size: i32, filepath: String) {
+        let size = Vec2::new(state.size.y as i32 * pixel_size * 2 - pixel_size, state.size.x as i32 * pixel_size * 2 - pixel_size);
+        println!("Pic size: {}x{}", size.x, size.y);
+
+        // TODO: Find way of drawing to image
+        // RgbImage & draw_filled_rect is slow & shitty
+
+       /* for x in 0..state.size.x {
+            for y in 0..state.size.y {
+
+            }
+        } */
     }
 }

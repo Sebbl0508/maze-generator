@@ -1,7 +1,6 @@
 use crate::util::vec2::Vec2;
-use serde::Serialize;
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq, Serialize)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum Direction {
     Up,
     Down,
