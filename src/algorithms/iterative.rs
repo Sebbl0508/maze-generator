@@ -7,7 +7,7 @@ use crate::util::{
 #[derive(Debug, Clone)]
 pub struct Cell {
     pos: Vec2<u32>,
-    dir_walked: Option<Direction>,
+    dir_walked: Vec<Direction>,
     visited: bool,
 }
 
@@ -40,7 +40,7 @@ impl Engine {
             for iter_y in 0..y {
                 tmp_x.push(Cell {
                     pos: Vec2::new(iter_x, iter_y),
-                    dir_walked: None,
+                    dir_walked: Vec::new(),
                     visited: false,
                 })
             }
@@ -176,7 +176,9 @@ impl Engine {
 
         let to_cell = self.mut_cell(rand_vec.x, rand_vec.y);
         to_cell.visited = true;
-        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked = Some(rand_dir);
+
+//        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked = Some(rand_dir);
+        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked.push(rand_dir);
 
         return Some(rand_vec);
     }
@@ -193,7 +195,7 @@ impl Cell {
     pub fn new(x: u32, y: u32) -> Self {
         Self {
             pos: Vec2::new(x, y),
-            dir_walked: None,
+            dir_walked: Vec::new(),
             visited: false,
         }
     }
@@ -252,28 +254,32 @@ mod img_export {
                 let yy = y * 2;
                 let xx = x * 2;
 
-                if !item.visited || item.dir_walked.is_none() {
+                if !item.visited || item.dir_walked.is_empty() {
                     skipped += 1;
                     continue;
                 }
 
                 let mut rect = Rect::at(0, 0).of_size(1, 1);
 
-                match item.dir_walked.unwrap() {
-                    Direction::Up => {
-                        rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size - pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                for i in &item.dir_walked {
+                    match i {
+                        Direction::Up => {
+                            rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size - pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                        }
+                        Direction::Down => {
+                            rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size + pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                        }
+                        Direction::Left => {
+                            rect = Rect::at(xx as i32 * pixel_size - pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                        }
+                        Direction::Right => {
+                            rect = Rect::at(xx as i32 * pixel_size + pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                        }
                     }
-                    Direction::Down => {
-                        rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size + pixel_size).of_size(pixel_size as u32, pixel_size as u32);
-                    }
-                    Direction::Left => {
-                        rect = Rect::at(xx as i32 * pixel_size - pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
-                    }
-                    Direction::Right => {
-                        rect = Rect::at(xx as i32 * pixel_size + pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
-                    }
+                    drawing::draw_filled_rect_mut(&mut img, rect, Rgb([255, 255, 255]));
                 }
-                drawing::draw_filled_rect_mut(&mut img, rect, Rgb([255, 255, 255]));
+
+                // drawing::draw_filled_rect_mut(&mut img, rect, Rgb([255, 255, 255]));
             }
         }
 
