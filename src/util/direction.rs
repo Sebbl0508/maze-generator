@@ -12,10 +12,10 @@ impl Direction {
     pub fn vector(&self) -> Vec2<isize> {
         return match *self {
             Direction::Up => {
-                Vec2::new(0, 1)
+                Vec2::new(0, -1)
             }
             Direction::Down => {
-                Vec2::new(0, -1)
+                Vec2::new(0, 1)
             }
             Direction::Left => {
                 Vec2::new(-1, 0)

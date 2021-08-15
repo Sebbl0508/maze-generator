@@ -147,20 +147,20 @@ impl Engine {
         }
 
         if cell_coord.y > 0 {
-            // Y = 0 Is the bottom, y+1 goes up
-            let bottom_neighbor = cell_coord.clone() + Direction::Down.vector();
+            // Y = 0 Is the top, y+1 goes down
+            let bottom_neighbor = cell_coord.clone() + Direction::Up.vector();
             let actual_cell = self.mut_cell_safe(bottom_neighbor.x, bottom_neighbor.y);
 
             if actual_cell.is_some() && !actual_cell.unwrap().visited() {
-                tmp_vec.push(Direction::Down);
+                tmp_vec.push(Direction::Up);
             }
         }
 
         if cell_coord.y < (self.size.y - 1) as usize {
-            let top_neighbor = cell_coord.clone() + Direction::Up.vector();
+            let top_neighbor = cell_coord.clone() + Direction::Down.vector();
             let actual_cell = self.mut_cell_safe(top_neighbor.x, top_neighbor.y);
             if actual_cell.is_some() && !actual_cell.unwrap().visited() {
-                tmp_vec.push(Direction::Up);
+                tmp_vec.push(Direction::Down);
             }
         }
 
