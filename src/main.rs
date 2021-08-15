@@ -12,6 +12,6 @@ fn main() {
 
     println!("\nSaving image...");
     let now = std::time::Instant::now();
-    iter_maze.save_image("tmp.png".to_string(), 20).unwrap();
+    iter_maze.save_image("test.png".to_string(), 20).unwrap();
     println!("Done, took {}ms", now.elapsed().as_millis().to_formatted_string(&Locale::de));
 }

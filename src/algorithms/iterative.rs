@@ -207,16 +207,81 @@ impl Cell {
 
 mod img_export {
     use crate::util::vec2::Vec2;
-    use image::{RgbImage, ImageFormat, Rgb};
+    use crate::util::direction::Direction;
+    use image::{ImageBuffer, ImageFormat, Rgb};
     use imageproc::{
         rect::{Rect, RectPosition},
-        drawing::draw_filled_rect,
+        drawing,
     };
+
 
     pub fn save_image(state: &super::Engine, pixel_size: i32, filepath: String) {
         let size = Vec2::new(state.size.y as i32 * pixel_size * 2 - pixel_size, state.size.x as i32 * pixel_size * 2 - pixel_size);
         println!("Pic size: {}x{}", size.x, size.y);
 
+        let mut img: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(size.x as u32, size.y as u32);
+
+        // Fill background White
+        drawing::draw_filled_rect_mut(&mut img, Rect::at(0, 0).of_size(size.x as u32, size.y as u32), Rgb([255, 255, 255]));
+
+        // Draw black every odd row
+        for y in 0..(state.size.x * 2) {
+            if y % 2 == 1 {
+                let tmp = Rect::at(0, y as i32 * pixel_size)
+                    .of_size(size.x as u32, pixel_size as u32);
+
+                drawing::draw_filled_rect_mut(&mut img, tmp, Rgb([0, 0, 0]));
+            }
+        }
+
+        // Same for columns
+        for x in 0..(state.size.y * 2) {
+            if x % 2 == 1 {
+                let tmp = Rect::at(x as i32 * pixel_size, 0)
+                    .of_size(pixel_size as u32, size.y as u32);
+
+                drawing::draw_filled_rect_mut(&mut img, tmp, Rgb([0, 0, 0]));
+            }
+        }
+        let mut skipped = 0;
+
+        for x in 0..(state.size.x) as usize {
+            for y in 0..(state.size.y) as usize {
+                let item = &state.grid[x][y];
+
+                let yy = y * 2;
+                let xx = x * 2;
+
+                if !item.visited || item.dir_walked.is_none() {
+                    skipped += 1;
+                    continue;
+                }
+
+                // Used for fuck you
+                let mut rect = Rect::at(0, 0).of_size(1, 1);
+
+                match item.dir_walked.unwrap() {
+                    Direction::Up => {
+                        rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size - pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                    }
+                    Direction::Down => {
+                        rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size + pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                    }
+                    Direction::Left => {
+                        rect = Rect::at(xx as i32 * pixel_size - pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                    }
+                    Direction::Right => {
+                        rect = Rect::at(xx as i32 * pixel_size + pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                    }
+                }
+                drawing::draw_filled_rect_mut(&mut img, rect, Rgb([255, 255, 255]));
+            }
+        }
+
+        println!("Skipped {} Cells", skipped);
+
+
+        img.save(filepath).unwrap();
         // TODO: Find way of drawing to image
         // RgbImage & draw_filled_rect is slow & shitty
 

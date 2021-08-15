@@ -7,8 +7,16 @@ edition = "2018"
 [dependencies]
 rand = "0.8.4"
 imageproc = "0.22.0"
-image = "*"
+image = "0.23"
 
 # These crates are purely for debug or kewl stuff
 # Not really needed
 num-format = "0.4.0"
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+panic = "abort"
+opt-level = 2
+lto = true
