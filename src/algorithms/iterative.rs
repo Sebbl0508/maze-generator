@@ -218,7 +218,7 @@ mod img_export {
 
 
     pub fn save_image(state: &super::Engine, pixel_size: i32, filepath: String) {
-        let size = Vec2::new(state.size.y as i32 * pixel_size * 2 - pixel_size, state.size.x as i32 * pixel_size * 2 - pixel_size);
+        let size = Vec2::new(state.size.x as i32 * pixel_size * 2 - pixel_size, state.size.y as i32 * pixel_size * 2 - pixel_size);
         println!("Pic size: {}x{}", size.x, size.y);
 
         let mut img: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(size.x as u32, size.y as u32);
@@ -227,7 +227,7 @@ mod img_export {
         drawing::draw_filled_rect_mut(&mut img, Rect::at(0, 0).of_size(size.x as u32, size.y as u32), Rgb([255, 255, 255]));
 
         // Draw black every odd row
-        for y in 0..(state.size.x * 2) {
+        for y in 0..(state.size.y * 2) {
             if y % 2 == 1 {
                 let tmp = Rect::at(0, y as i32 * pixel_size)
                     .of_size(size.x as u32, pixel_size as u32);
@@ -237,7 +237,7 @@ mod img_export {
         }
 
         // Same for columns
-        for x in 0..(state.size.y * 2) {
+        for x in 0..(state.size.x * 2) {
             if x % 2 == 1 {
                 let tmp = Rect::at(x as i32 * pixel_size, 0)
                     .of_size(pixel_size as u32, size.y as u32);

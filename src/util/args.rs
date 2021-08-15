@@ -11,7 +11,7 @@ pub fn parse_args() -> Result<Args, String> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 3 {
-        return Err(format!("Too few arguments!\nUsage: ./{} [X] [Y] [pixel size (optional)] [output filepath (optional)]", args[0]));
+        return Err(format!("Too few arguments!\nUsage: './{} [X] [Y] [pixel size (optional)] [output filepath (optional)]'", args[0]));
     }
 
     let x = match args[1].parse() {
