@@ -257,7 +257,6 @@ mod img_export {
                     continue;
                 }
 
-                // Used for fuck you
                 let mut rect = Rect::at(0, 0).of_size(1, 1);
 
                 match item.dir_walked.unwrap() {
@@ -282,13 +281,5 @@ mod img_export {
 
 
         img.save(filepath).unwrap();
-        // TODO: Find way of drawing to image
-        // RgbImage & draw_filled_rect is slow & shitty
-
-       /* for x in 0..state.size.x {
-            for y in 0..state.size.y {
-
-            }
-        } */
     }
 }
