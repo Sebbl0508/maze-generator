@@ -1,10 +1,20 @@
 mod algorithms;
 mod util;
 use num_format::{Locale, ToFormattedString};
+use util::args::parse_args;
 
 fn main() {
+    let args = match parse_args() {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            std::process::exit(-1);
+        }
+    };
+
+
     let now = std::time::Instant::now();
-    let mut iter_maze = algorithms::iterative::Engine::new(50, 50);
+    let mut iter_maze = algorithms::iterative::Engine::new(args.x, args.y);
 
     println!("Generating maze...");
     iter_maze.run();
@@ -12,6 +22,6 @@ fn main() {
 
     println!("\nSaving image...");
     let now = std::time::Instant::now();
-    iter_maze.save_image("test.png".to_string(), 20).unwrap();
+    iter_maze.save_image(args.filepath, args.pixel_size).unwrap();
     println!("Done, took {}ms", now.elapsed().as_millis().to_formatted_string(&Locale::de));
 }
