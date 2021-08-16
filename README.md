@@ -1,4 +1,8 @@
 # Maze generation algorithm
+<div align="center">
+	<img title="Maze" alt="IDK" src="assets/example_maze.png">
+</div>
+  
 This is a rust program that generates a maze using a [stack-based iterative implementation](https://en.wikipedia.org/wiki/Maze_generation_algorithm).  
 The resulting maze can/will be exported as a picture file
   
