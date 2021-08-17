@@ -14,6 +14,8 @@ fn main() {
 
 
     let now = std::time::Instant::now();
+
+    println!("Creating maze object...");
     let mut iter_maze = algorithms::iterative::Engine::new(args.x, args.y);
 
     println!("Generating maze...");
