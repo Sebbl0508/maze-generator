@@ -1,5 +1,7 @@
-mod algorithms;
+mod maze_algorithms;
 mod util;
+mod tests;
+
 use num_format::{Locale, ToFormattedString};
 use util::args::parse_args;
 
@@ -16,7 +18,7 @@ fn main() {
     let now = std::time::Instant::now();
 
     println!("Creating maze object...");
-    let mut iter_maze = algorithms::iterative::Engine::new(args.x, args.y);
+    let mut iter_maze = maze_algorithms::iterative::Engine::new(args.x, args.y);
 
     println!("Generating maze...");
     iter_maze.run();
