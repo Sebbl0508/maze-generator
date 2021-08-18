@@ -52,8 +52,9 @@ impl Engine {
     }
 
     pub fn print_progress(&self) {
-        #[cfg(debug_assertions)]
-        println!("{:#?}", (self.size.x * self.size.y) as f64 / (self.visited_places + 1) as f64);
+        // Pls dont
+        // #[cfg(debug_assertions)]
+        // println!("{:#?}", (self.size.x * self.size.y) as f64 / (self.visited_places + 1) as f64);
     }
 
     /// Number of elements in the grid
@@ -219,7 +220,7 @@ mod img_export {
 
     pub fn save_image(state: &super::Engine, pixel_size: i32, filepath: String) {
         let size = Vec2::new(state.size.x as i32 * pixel_size * 2 - pixel_size, state.size.y as i32 * pixel_size * 2 - pixel_size);
-        println!("Pic size: {}x{}", size.x, size.y);
+        // println!("Pic size: {}x{}", size.x, size.y);
 
         let mut img: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(size.x as u32, size.y as u32);
 
@@ -283,7 +284,7 @@ mod img_export {
             }
         }
 
-        println!("Skipped {} Cells", skipped);
+        // println!("Skipped {} Cells", skipped);
 
 
         img.save(filepath).unwrap();

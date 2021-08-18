@@ -1,11 +1,30 @@
 mod maze_algorithms;
 mod util;
 mod tests;
+mod pathfinding;
 
 use num_format::{Locale, ToFormattedString};
 use util::args::parse_args;
+use util::flush_out;
 
 fn main() {
+    println!("Generating maze object...");
+    let mut maze = maze_algorithms::iterative::Engine::new(500, 500);
+    println!("Done\n");
+
+    println!("Generating maze...");
+    maze.run();
+    println!("Done\n");
+
+    println!("Saving image...");
+    maze.save_image("tmp.png".to_string(), 1).unwrap();
+    println!("Done\n");
+
+    println!("Calculating path...");
+    pathfinding::calculate_path("./tmp.png");
+    println!("Done\n");
+
+    /*
     let args = match parse_args() {
         Ok(v) => v,
         Err(e) => {
@@ -28,4 +47,5 @@ fn main() {
     let now = std::time::Instant::now();
     iter_maze.save_image(args.filepath, args.pixel_size).unwrap();
     println!("Done, took {}ms", now.elapsed().as_millis().to_formatted_string(&Locale::de));
+     */
 }
