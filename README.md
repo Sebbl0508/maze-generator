@@ -12,3 +12,7 @@ The making of this was inspired by [logicguy](https://github.com/logicguy1)
 ```shell
 ./[bin] [X] [Y] [pixel size (optional)] [output path (optional)]
 ```
+
+### Automatic solving
+THIS DOESN'T WORK YET!  
+Switch back to the `master` branch. (please)

@@ -1,13 +1,14 @@
 use crate::util::vec2::Vec2;
+use crate::util::direction::Direction;
 
-use image::{Rgb, ImageBuffer, RgbImage, ImageFormat, io::Reader as ImgReader, DynamicImage, Pixel, Rgba, GenericImageView};
+use image::{Rgb, ImageBuffer, RgbImage, ImageFormat, io::Reader as ImgReader, DynamicImage, Pixel, Rgba, GenericImageView, GenericImage};
 use imageproc::{
     rect::{Rect, RectPosition},
     drawing,
 };
 use std::path::Path;
-use core::fmt::Alignment::Center;
-use crate::util::direction::Direction;
+
+use rand::prelude::*;
 // use imageproc::drawing::Canvas;
 
 #[derive(Debug, Clone)]
@@ -23,12 +24,14 @@ struct Field {
 
 #[derive(Debug, Clone)]
 struct Cell {
+    x: u32,
+    y: u32,
     kind: CellType,
     visited: bool,
     distance: u64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 enum CellType {
     Wall,
     Space,
@@ -64,16 +67,25 @@ pub fn calculate_path(img_path: &str) {
 
             // Wall black pixel
             if pxl.0[0] == 0x00 {
-                solver.field.grid[x as usize][y as usize] = Some(Cell::new(CellType::Wall, default_dist));
+                solver.field.grid[x as usize][y as usize] = Some(Cell::new(x, y, CellType::Wall, default_dist));
             } else if pxl.0[0] == 0xFF { // White free pixel
-                solver.field.grid[x as usize][y as usize] = Some(Cell::new(CellType::Space, default_dist));
+                solver.field.grid[x as usize][y as usize] = Some(Cell::new(x, y, CellType::Space, default_dist));
             } else {
-                panic!("This should NOT! happen");
+                panic!("This should NOT happen!");
             }
         }
     }
 
-    // image.save("tmp_solved.png").unwrap();
+    let mut rng = thread_rng();
+
+    let mut cur = solver.field.cell_safe(0, 0).unwrap();
+
+
+
+    // Debug print
+    // println!("{:#?}", solver.field.grid);
+
+    image.save("tmp_solved.png").unwrap();
 }
 
 impl Field {
@@ -111,7 +123,9 @@ impl Field {
 
             let cur = self.cell_safe(other.x as u32, other.y as u32);
             if let Some(v) = cur {
-                valids.push(v);
+                if v.kind != CellType::Wall && v.visited == false {
+                    valids.push(v);
+                }
             }
         }
 
@@ -137,8 +151,10 @@ impl Field {
 }
 
 impl Cell {
-    pub fn new(celltype: CellType, distance: u64) -> Self {
+    pub fn new(x: u32, y: u32, celltype: CellType, distance: u64) -> Self {
         Cell {
+            x,
+            y,
             kind: celltype,
             visited: false,
             distance,

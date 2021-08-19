@@ -9,7 +9,7 @@ use util::flush_out;
 
 fn main() {
     println!("Generating maze object...");
-    let mut maze = maze_algorithms::iterative::Engine::new(500, 500);
+    let mut maze = maze_algorithms::iterative::Engine::new(800, 800);
     println!("Done\n");
 
     println!("Generating maze...");
