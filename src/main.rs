@@ -12,7 +12,6 @@ fn main() {
         }
     };
 
-
     let now = std::time::Instant::now();
 
     println!("Creating maze object...");
@@ -20,10 +19,21 @@ fn main() {
 
     println!("Generating maze...");
     iter_maze.run();
-    println!("Done, time taken for {} ({}x{}) elements: {}ms", iter_maze.num_elements().to_formatted_string(&Locale::de), iter_maze.size.x.to_formatted_string(&Locale::de), iter_maze.size.y.to_formatted_string(&Locale::de), now.elapsed().as_millis().to_formatted_string(&Locale::de));
+    println!(
+        "Done, time taken for {} ({}x{}) elements: {}ms",
+        iter_maze.num_elements().to_formatted_string(&Locale::de),
+        iter_maze.size.x.to_formatted_string(&Locale::de),
+        iter_maze.size.y.to_formatted_string(&Locale::de),
+        now.elapsed().as_millis().to_formatted_string(&Locale::de)
+    );
 
     println!("\nSaving image...");
     let now = std::time::Instant::now();
-    iter_maze.save_image(args.filepath, args.pixel_size).unwrap();
-    println!("Done, took {}ms", now.elapsed().as_millis().to_formatted_string(&Locale::de));
+    iter_maze
+        .save_image(args.filepath, args.pixel_size)
+        .unwrap();
+    println!(
+        "Done, took {}ms",
+        now.elapsed().as_millis().to_formatted_string(&Locale::de)
+    );
 }

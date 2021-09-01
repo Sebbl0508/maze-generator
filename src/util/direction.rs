@@ -5,25 +5,17 @@ pub enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
 }
 
 impl Direction {
     pub fn vector(&self) -> Vec2<isize> {
         return match *self {
-            Direction::Up => {
-                Vec2::new(0, -1)
-            }
-            Direction::Down => {
-                Vec2::new(0, 1)
-            }
-            Direction::Left => {
-                Vec2::new(-1, 0)
-            }
-            Direction::Right => {
-                Vec2::new(1, 0)
-            }
-        }
+            Direction::Up => Vec2::new(0, -1),
+            Direction::Down => Vec2::new(0, 1),
+            Direction::Left => Vec2::new(-1, 0),
+            Direction::Right => Vec2::new(1, 0),
+        };
     }
 
     pub fn opposite(&self) -> Self {

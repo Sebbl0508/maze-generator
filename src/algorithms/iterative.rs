@@ -1,8 +1,5 @@
+use crate::util::{direction::Direction, vec2::Vec2};
 use rand::prelude::*;
-use crate::util::{
-    vec2::Vec2,
-    direction::Direction,
-};
 
 #[derive(Debug, Clone)]
 pub struct Cell {
@@ -16,7 +13,7 @@ pub struct Engine {
     stack: Vec<Vec2<usize>>,
     pub size: Vec2<u32>,
     grid: Vec<Vec<Cell>>,
-    visited_places: u64
+    visited_places: u64,
 }
 
 impl Engine {
@@ -53,7 +50,10 @@ impl Engine {
 
     pub fn print_progress(&self) {
         #[cfg(debug_assertions)]
-        println!("{:#?}", (self.size.x * self.size.y) as f64 / (self.visited_places + 1) as f64);
+        println!(
+            "{:#?}",
+            (self.size.x * self.size.y) as f64 / (self.visited_places + 1) as f64
+        );
     }
 
     /// Number of elements in the grid
@@ -64,8 +64,10 @@ impl Engine {
     /// This method starts the generation algorithm
     pub fn run(&mut self) {
         let mut rng = thread_rng();
-        let start_pos: Vec2<u32> = Vec2::new(rng.gen_range(0..self.size.x), rng.gen_range(0..self.size.y));
-        self.stack.push(Vec2::new(start_pos.x as usize, start_pos.y as usize));
+        let start_pos: Vec2<u32> =
+            Vec2::new(rng.gen_range(0..self.size.x), rng.gen_range(0..self.size.y));
+        self.stack
+            .push(Vec2::new(start_pos.x as usize, start_pos.y as usize));
 
         while !self.stack.is_empty() {
             // TODO: This progress number should stop a 1.0, but it continues < 1.0
@@ -75,7 +77,7 @@ impl Engine {
             // First get the coordinate of the current cell off the stack
             // Then shadow the coord variable and put the a mutable reference to the actual cell into the variable
             let curr_cell = self.stack.pop().unwrap();
-//            let curr_cell = self.mut_cell(curr_cell.x, curr_cell.y);
+            //            let curr_cell = self.mut_cell(curr_cell.x, curr_cell.y);
 
             match self.unvisited_neighbors(curr_cell.clone()) {
                 Some(v) => {
@@ -83,13 +85,12 @@ impl Engine {
                     self.stack.push(v);
 
                     self.visited_places += 1;
-//                    let actual_cell = self.mut_cell(curr_cell.x, curr_cell.y);
+                    //                    let actual_cell = self.mut_cell(curr_cell.x, curr_cell.y);
                 }
                 None => {
                     continue;
                 }
             }
-
         }
     }
 
@@ -101,17 +102,13 @@ impl Engine {
     /// Like `mut_cell` but returns `None` if the cell doesn't exist
     pub fn mut_cell_safe(&mut self, x: usize, y: usize) -> Option<&mut Cell> {
         match self.grid.get_mut(x) {
-            Some(v) => {
-                match v.get_mut(y) {
-                    Some(v) => Some(v),
-                    None => {
-                        return None;
-                    }
+            Some(v) => match v.get_mut(y) {
+                Some(v) => Some(v),
+                None => {
+                    return None;
                 }
-            }
-            None => {
-                return None
-            }
+            },
+            None => return None,
         }
     }
 
@@ -168,8 +165,6 @@ impl Engine {
             return None;
         }
 
-
-
         // Get a random neighbor and return
         let rand_dir = tmp_vec.choose(&mut rng).unwrap().clone();
         let rand_vec = cell_coord.clone() + rand_dir.vector();
@@ -177,8 +172,10 @@ impl Engine {
         let to_cell = self.mut_cell(rand_vec.x, rand_vec.y);
         to_cell.visited = true;
 
-//        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked = Some(rand_dir);
-        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked.push(rand_dir);
+        //        self.mut_cell(cell_coord.x, cell_coord.y).dir_walked = Some(rand_dir);
+        self.mut_cell(cell_coord.x, cell_coord.y)
+            .dir_walked
+            .push(rand_dir);
 
         return Some(rand_vec);
     }
@@ -208,29 +205,35 @@ impl Cell {
 }
 
 mod img_export {
-    use crate::util::vec2::Vec2;
     use crate::util::direction::Direction;
+    use crate::util::vec2::Vec2;
     use image::{ImageBuffer, ImageFormat, Rgb};
     use imageproc::{
-        rect::{Rect, RectPosition},
         drawing,
+        rect::{Rect, RectPosition},
     };
 
-
     pub fn save_image(state: &super::Engine, pixel_size: i32, filepath: String) {
-        let size = Vec2::new(state.size.x as i32 * pixel_size * 2 - pixel_size, state.size.y as i32 * pixel_size * 2 - pixel_size);
+        let size = Vec2::new(
+            state.size.x as i32 * pixel_size * 2 - pixel_size,
+            state.size.y as i32 * pixel_size * 2 - pixel_size,
+        );
         println!("Pic size: {}x{}", size.x, size.y);
 
         let mut img: ImageBuffer<Rgb<u8>, Vec<u8>> = ImageBuffer::new(size.x as u32, size.y as u32);
 
         // Fill background White
-        drawing::draw_filled_rect_mut(&mut img, Rect::at(0, 0).of_size(size.x as u32, size.y as u32), Rgb([255, 255, 255]));
+        drawing::draw_filled_rect_mut(
+            &mut img,
+            Rect::at(0, 0).of_size(size.x as u32, size.y as u32),
+            Rgb([255, 255, 255]),
+        );
 
         // Draw black every odd row
         for y in 0..(state.size.y * 2) {
             if y % 2 == 1 {
-                let tmp = Rect::at(0, y as i32 * pixel_size)
-                    .of_size(size.x as u32, pixel_size as u32);
+                let tmp =
+                    Rect::at(0, y as i32 * pixel_size).of_size(size.x as u32, pixel_size as u32);
 
                 drawing::draw_filled_rect_mut(&mut img, tmp, Rgb([0, 0, 0]));
             }
@@ -239,8 +242,8 @@ mod img_export {
         // Same for columns
         for x in 0..(state.size.x * 2) {
             if x % 2 == 1 {
-                let tmp = Rect::at(x as i32 * pixel_size, 0)
-                    .of_size(pixel_size as u32, size.y as u32);
+                let tmp =
+                    Rect::at(x as i32 * pixel_size, 0).of_size(pixel_size as u32, size.y as u32);
 
                 drawing::draw_filled_rect_mut(&mut img, tmp, Rgb([0, 0, 0]));
             }
@@ -264,16 +267,32 @@ mod img_export {
                 for i in &item.dir_walked {
                     match i {
                         Direction::Up => {
-                            rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size - pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                            rect = Rect::at(
+                                xx as i32 * pixel_size,
+                                yy as i32 * pixel_size - pixel_size,
+                            )
+                            .of_size(pixel_size as u32, pixel_size as u32);
                         }
                         Direction::Down => {
-                            rect = Rect::at(xx as i32 * pixel_size, yy as i32 * pixel_size + pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                            rect = Rect::at(
+                                xx as i32 * pixel_size,
+                                yy as i32 * pixel_size + pixel_size,
+                            )
+                            .of_size(pixel_size as u32, pixel_size as u32);
                         }
                         Direction::Left => {
-                            rect = Rect::at(xx as i32 * pixel_size - pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                            rect = Rect::at(
+                                xx as i32 * pixel_size - pixel_size,
+                                yy as i32 * pixel_size,
+                            )
+                            .of_size(pixel_size as u32, pixel_size as u32);
                         }
                         Direction::Right => {
-                            rect = Rect::at(xx as i32 * pixel_size + pixel_size, yy as i32 * pixel_size).of_size(pixel_size as u32, pixel_size as u32);
+                            rect = Rect::at(
+                                xx as i32 * pixel_size + pixel_size,
+                                yy as i32 * pixel_size,
+                            )
+                            .of_size(pixel_size as u32, pixel_size as u32);
                         }
                     }
                     drawing::draw_filled_rect_mut(&mut img, rect, Rgb([255, 255, 255]));
@@ -284,7 +303,6 @@ mod img_export {
         }
 
         println!("Skipped {} Cells", skipped);
-
 
         img.save(filepath).unwrap();
     }
