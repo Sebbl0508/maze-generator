@@ -28,15 +28,12 @@ pub fn parse_args() -> Result<Args, String> {
         }
     };
 
-
-
-
     if args.len() == 3 {
         return Ok(Args {
             x,
             y,
             pixel_size: 20,
-            filepath: "output.png".to_string()
+            filepath: "output.png".to_string(),
         });
     } else if args.len() == 4 {
         let pxl_size = match args[3].parse() {
@@ -50,8 +47,8 @@ pub fn parse_args() -> Result<Args, String> {
             x,
             y,
             pixel_size: pxl_size,
-            filepath: "output.png".to_string()
-        })
+            filepath: "output.png".to_string(),
+        });
     } else if args.len() == 5 {
         let pxl_size = match args[3].parse() {
             Ok(v) => v,
@@ -67,9 +64,8 @@ pub fn parse_args() -> Result<Args, String> {
             y,
             pixel_size: pxl_size,
             filepath,
-        })
+        });
     }
 
     return Err("This shouldn't happen!".to_string());
 }
-
