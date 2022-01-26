@@ -10,8 +10,8 @@ pub struct Cell {
 
 #[derive(Debug, Clone)]
 pub struct Engine {
-    stack: Vec<Vec2<usize>>,
     pub size: Vec2<u32>,
+    stack: Vec<Vec2<usize>>,
     grid: Vec<Vec<Cell>>,
     visited_places: u64,
 }
