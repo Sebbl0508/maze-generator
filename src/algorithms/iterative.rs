@@ -70,14 +70,11 @@ impl Engine {
             .push(Vec2::new(start_pos.x as usize, start_pos.y as usize));
 
         while !self.stack.is_empty() {
-            // TODO: This progress number should stop a 1.0, but it continues < 1.0
-            // Figure out why :/
             self.print_progress();
 
             // First get the coordinate of the current cell off the stack
             // Then shadow the coord variable and put the a mutable reference to the actual cell into the variable
             let curr_cell = self.stack.pop().unwrap();
-            //            let curr_cell = self.mut_cell(curr_cell.x, curr_cell.y);
 
             match self.unvisited_neighbors(curr_cell.clone()) {
                 Some(v) => {
@@ -85,7 +82,6 @@ impl Engine {
                     self.stack.push(v);
 
                     self.visited_places += 1;
-                    //                    let actual_cell = self.mut_cell(curr_cell.x, curr_cell.y);
                 }
                 None => {
                     continue;
