@@ -5,13 +5,13 @@ edition = "2018"
 
 
 [dependencies]
-rand = "0.8.4"
+rand = "0.8.5"
 imageproc = "0.22.0"
 image = "0.23"
 
 # These crates are purely for debug or kewl stuff
 # Not really needed
-num-format = "0.4.0"
+num-format = "0.4.3"
 
 [profile.dev]
 opt-level = 1
